@@ -9,50 +9,66 @@
         <jakmall-checkbox v-model="isDropshipper" />
       </div>
     </div>
-    <div class="delivery__form">
-      <div class="delivery__form-left">
-        <jakmall-input
-          v-model="email"
-          label="Email"
-          class="delivery__form-left__input"
-          rules="required|min:8|max:12|email"
-        />
-        <jakmall-input
-          v-model="phone"
-          label="Phone Number"
-          class="delivery__form-left__input"
-          :rules="{
-            min: 6,
-            max: 20,
-            regex: /(\+62 ((\d{3}([ -]\d{3,})([- ]\d{4,})?)|(\d+)))|(\(\d+\) \d+)|\d{3}( \d+)+|(\d+[ -]\d+)|\d+/
-          }"
-        />
-        <jakmall-text-area
-          v-model="address"
-          label="Delivery Address"
-          class="delivery__form-left__input"
-          rules="required|max:120"
-        />
+    <ValidationObserver ref="form">
+      <div class="delivery__form">
+        <div class="delivery__form-left">
+          <jakmall-input
+            id="email"
+            v-model="email"
+            label="Email"
+            class="delivery__form-left__input"
+            rules="email|required"
+          />
+          <jakmall-input
+            id="phone"
+            v-model="phone"
+            label="Phone Number"
+            class="delivery__form-left__input"
+            :rules="{
+              min: 6,
+              max: 20,
+              required: true,
+              regex: /^(\(?\+?[0-9]*\)?)?[0-9_\- \(\)]*$/
+            }"
+          />
+          <jakmall-text-area
+            id="address"
+            v-model="address"
+            label="Delivery Address"
+            class="delivery__form-left__input address"
+            rules="required|max:120"
+          />
+        </div>
+        <div class="delivery__form-right">
+          <jakmall-input
+            id="dropshipper-name"
+            v-model="dropshipper.name"
+            label="Dropshipper name"
+            class="delivery__form-right__input dropshipper-name"
+            :disabled="!isDropshipper"
+            :rules="isDropshipper ? 'required' : ''"
+          />
+          <jakmall-input
+            id="dropshipper-phone"
+            v-model="dropshipper.phone"
+            label="Dropshipper phone number"
+            class="delivery__form-right__input"
+            :disabled="!isDropshipper"
+            :rules="{
+              min: 6,
+              max: 20,
+              required: true,
+              regex: /^(\(?\+?[0-9]*\)?)?[0-9_\- \(\)]*$/
+            }"
+          />
+        </div>
       </div>
-      <div class="delivery__form-right">
-        <jakmall-input
-          v-model="dropshipper.name"
-          label="Dropshipper name"
-          class="delivery__form-right__input dropshipper-name"
-          :disabled="!isDropshipper"
-        />
-        <jakmall-input
-          v-model="dropshipper.phoneNumber"
-          label="Dropshipper phone number"
-          class="delivery__form-right__input"
-          :disabled="!isDropshipper"
-        />
-      </div>
-    </div>
+    </ValidationObserver>
   </div>
 </template>
 
 <script>
+import { mapState, mapMutations } from 'vuex'
 import JakmallInput from '../base/Input'
 import JakmallTextArea from '../base/TextArea'
 import JakmallCheckbox from '../base/Checkbox'
@@ -70,9 +86,75 @@ export default {
     isDropshipper: false,
     dropshipper: {
       name: null,
-      phoneNumber: null
+      phone: null
+    },
+    dropshipCost: 0,
+    errors: []
+  }),
+  computed: {
+    ...mapState({
+      buyerEmail: (state) => state.purchase.buyer.email,
+      buyerPhone: (state) => state.purchase.buyer.phone,
+      buyerAddress: (state) => state.purchase.buyer.address,
+      dropshipperName: (state) => state.purchase.dropshipper.name,
+      dropshipperPhone: (state) => state.purchase.dropshipper.phone,
+      goodsCost: (state) => state.purchase.bills.goods,
+      dropshipmentCost: (state) => state.purchase.bills.dropshipment,
+      total: (state) => state.purchase.total,
+      goods: (state) => state.purchase.goods
+    }),
+    costOfGoods() {
+      const data = this.goods.reduce(
+        (total, current) => total + current.price,
+        0
+      )
+      return data
+    },
+    currentTotal() {
+      return this.costOfGoods + this.dropshipCost
     }
-  })
+  },
+  watch: {
+    isDropshipper(value) {
+      if (value === false) this.resetDropship()
+      else this.dropshipCost = 5900
+    },
+    dropshipCost(value) {
+      this.setDropshipmentCost(value)
+    },
+    currentTotal(value) {
+      this.setTotal(value)
+    }
+  },
+  created() {
+    this.setGoodsCost(this.costOfGoods)
+  },
+  methods: {
+    ...mapMutations([
+      'setBuyerEmail',
+      'setBuyerPhone',
+      'setBuyerAddress',
+      'setIsDropshipper',
+      'setDropshipperName',
+      'setDropshipperPhone',
+      'setGoodsCost',
+      'setDropshipmentCost',
+      'setShipmentCost',
+      'setTotal'
+    ]),
+    resetDropship() {
+      this.dropshipper.name = null
+      this.dropshipper.phone = null
+      this.dropshipCost = 0
+    },
+    submit() {
+      this.setBuyerEmail(this.email)
+      this.setBuyerPhone(this.phone)
+      this.setBuyerAddress(this.address)
+      this.setDropshipperName(this.dropshipper.name)
+      this.setDropshipperPhone(this.dropshipper.phone)
+    }
+  }
 }
 </script>
 
@@ -92,14 +174,17 @@ export default {
 
     &-right
       width 100%
+      margin-top 1rem
 
     @media screen and (min-width: 700px)
       &-left
+        width 70%
         display inline-block
         width 18rem
 
       &-right
-        width 20%
+        width 30%
+        margin-top 0
 
   &__title-content
     color #ff8600
@@ -157,4 +242,7 @@ export default {
 
         &__input.dropshipper-name
           margin-top 0px
+@media screen and (max-width: 800px)
+  .address
+    margin-bottom 1rem
 </style>

@@ -8,7 +8,7 @@
         :style="{ width: 'calc(100%/' + size + ')' }"
       >
         <div
-          v-if="currentStep == index + 1"
+          v-if="currentStep >= index + 1"
           class="stepper__item__bullet--active"
         >
           {{ index + 1 }}
@@ -41,7 +41,7 @@ export default {
     currentStep: { type: Number, default: 1 }
   },
   data: () => ({
-    width: 0
+    width: window.innerWidth
   }),
   computed: {
     size() {
@@ -62,7 +62,7 @@ export default {
   display flex
   flex-wrap wrap
   align-items center
-  padding .5rem 1rem
+  padding .75rem 1rem
   background #fff3e5
   width 50%
   max-width 450px

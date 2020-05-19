@@ -12,7 +12,7 @@
 export default {
   props: {
     color: { type: String, default: null },
-    value: { type: String, default: null }
+    value: { type: Boolean, default: null }
   },
   data: () => ({
     input: null

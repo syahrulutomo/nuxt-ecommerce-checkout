@@ -11,12 +11,12 @@ import { extend } from 'vee-validate'
 
 extend('required', {
   ...required,
-  message: 'This field is required'
+  message: "This field shouldn't be empty"
 })
 
 extend('numeric', {
   ...numeric,
-  message: 'This field must be contain number'
+  message: 'This field should be filled with numbers'
 })
 
 extend('max', {
@@ -36,10 +36,10 @@ extend('email', {
 
 extend('excluded', {
   ...excluded,
-  message: 'The value is not valid'
+  message: 'The value is not prohibited'
 })
 
 extend('regex', {
   ...regex,
-  message: 'Regex not matched'
+  message: 'The value is not valid'
 })

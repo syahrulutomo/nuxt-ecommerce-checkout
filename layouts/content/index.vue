@@ -38,6 +38,9 @@ export default {
   .container
     background-color white
     padding 2rem
+    max-width 1000px
+    margin-left auto
+    margin-right auto
 
     .stepper-container
       position relative
@@ -62,10 +65,9 @@ export default {
       @media screen and (min-width: 800px)
         .section-left
           width calc(70% - 2rem)
-          padding-right 2rem
 
         .section-right
-          width 25%
+          width 30%
           border-left 1px solid #ffe8c1
 
       @media screen and (min-width: 1100px)
