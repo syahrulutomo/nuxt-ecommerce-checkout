@@ -45,7 +45,7 @@ export default {
   /*
    ** Global CSS
    */
-  css: ['@/assets/main.styl'],
+  css: ['@/assets/toast.styl', '@/assets/main.styl'],
   /*
    ** Plugins to load before mounting the App
    */
@@ -65,13 +65,25 @@ export default {
     '@nuxtjs/axios',
     '@nuxtjs/pwa',
     // Doc: https://github.com/nuxt-community/dotenv-module
-    '@nuxtjs/dotenv'
+    '@nuxtjs/dotenv',
+    '@nuxtjs/toast'
   ],
   /*
    ** Axios module configuration
    ** See https://axios.nuxtjs.org/options
    */
   axios: {},
+  toast: {
+    fullWidth: false,
+    position: 'top-center',
+    duration: 2000,
+    action: {
+      text: 'close',
+      onClick: (e, toastObject) => {
+        toastObject.goAway(0)
+      }
+    }
+  },
   /*
    ** Build configuration
    */

@@ -34,5 +34,8 @@ export default {
   },
   setGoods(state, data) {
     state.goods = data
+  },
+  setValid(state, data) {
+    state.valid = data
   }
 }

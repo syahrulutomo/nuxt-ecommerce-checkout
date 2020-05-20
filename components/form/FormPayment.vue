@@ -8,7 +8,7 @@
     ></grid-options>
     <grid-options
       title="Payment"
-      :list="paymentList"
+      :list="updatedPaymentList"
       :selected="payment"
       @clicked="selectPayment"
     ></grid-options>
@@ -33,7 +33,10 @@ export default {
       payment: (state) => state.payment.selected,
       shipmentList: (state) => state.shipment.patners,
       shipment: (state) => state.shipment.selected,
-      saldo: (state) => state.purchase.saldo
+      saldo: (state) => state.purchase.saldo,
+      dropshipmentCost: (state) => state.purchase.bills.dropshipment,
+      costOfGoods: (state) => state.purchase.bills.goods,
+      total: (state) => state.purchase.total
     }),
     updatedPaymentList() {
       return this.paymentList.map((item) => {
@@ -47,9 +50,17 @@ export default {
     }
   },
   methods: {
-    ...mapMutations(['setSelectedShipment', 'setSelectedPayment']),
+    ...mapMutations([
+      'setSelectedShipment',
+      'setSelectedPayment',
+      'setShipmentCost',
+      'setTotal'
+    ]),
     selectShipment(data) {
       this.setSelectedShipment(data)
+      this.setShipmentCost(data.cost)
+      const total = this.costOfGoods + data.cost + this.dropshipmentCost
+      this.setTotal(total)
     },
     selectPayment(data) {
       this.setSelectedPayment(data)
@@ -57,5 +68,3 @@ export default {
   }
 }
 </script>
-
-<style lang="stylus" scoped></style>

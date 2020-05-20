@@ -18,7 +18,7 @@
         v-if="currentStep === 1"
         slot="submit-btn"
         class="submit-btn"
-        @click="setCurrentStep(step + 1)"
+        @click="submitDetails()"
       >
         Continue to Payment
       </button>
@@ -26,7 +26,7 @@
         v-else-if="currentStep === 2"
         slot="submit-btn"
         class="submit-btn"
-        @click="setCurrentStep(step + 1)"
+        @click="submitDelivery()"
       >
         Pay with <span v-if="payment">{{ payment.name }}</span>
       </button>
@@ -58,7 +58,10 @@ export default {
   }),
   computed: {
     ...mapState({
-      currentStep: (state) => state.purchase.currentStep
+      currentStep: (state) => state.purchase.currentStep,
+      payment: (state) => state.payment.selected,
+      shipment: (state) => state.shipment.selected,
+      valid: (state) => state.purchase.valid
     })
   },
   watch: {
@@ -76,10 +79,12 @@ export default {
       if (step >= 1) this.setCurrentStep(step)
     },
     submitDetails() {
-      this.setCurrentStep(this.step + 1)
+      if (this.valid) this.setCurrentStep(this.step + 1)
+      else this.$toast.error('Data is not valid yet')
     },
     submitDelivery() {
-      this.setCurrentStep(this.step + 1)
+      if (this.shipment && this.payment) this.setCurrentStep(this.step + 1)
+      else this.$toast.error('Please select shipment method')
     }
   }
 }

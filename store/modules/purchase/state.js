@@ -30,7 +30,7 @@ export const initial = () => ({
   total: 0,
   currentStep: 1,
   saldo: 1500000,
-  validate: false
+  valid: false
 })
 
 export default initial

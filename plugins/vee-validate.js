@@ -41,5 +41,5 @@ extend('excluded', {
 
 extend('regex', {
   ...regex,
-  message: 'The value is not valid'
+  message: 'Format is not valid'
 })

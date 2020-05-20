@@ -54,12 +54,11 @@
             label="Dropshipper phone number"
             class="delivery__form-right__input"
             :disabled="!isDropshipper"
-            :rules="{
-              min: 6,
-              max: 20,
-              required: true,
-              regex: /^(\(?\+?[0-9]*\)?)?[0-9_\- \(\)]*$/
-            }"
+            :rules="
+              isDropshipper
+                ? 'min: 6| max: 20| required: true | regex: /^(\(?\+?[0-9]*\)?)?[0-9_\- \(\)]*$/'
+                : ''
+            "
           />
         </div>
       </div>
@@ -69,6 +68,7 @@
 
 <script>
 import { mapState, mapMutations } from 'vuex'
+import { ValidationObserver } from 'vee-validate'
 import JakmallInput from '../base/Input'
 import JakmallTextArea from '../base/TextArea'
 import JakmallCheckbox from '../base/Checkbox'
@@ -77,7 +77,8 @@ export default {
   components: {
     JakmallInput,
     JakmallTextArea,
-    JakmallCheckbox
+    JakmallCheckbox,
+    ValidationObserver
   },
   data: () => ({
     email: null,
@@ -124,10 +125,26 @@ export default {
     },
     currentTotal(value) {
       this.setTotal(value)
+    },
+    email(value) {
+      this.submit()
+    },
+    phone(value) {
+      this.submit()
+    },
+    address(value) {
+      this.submit()
+    },
+    'dropshipper.name'(value) {
+      this.submit()
+    },
+    'dropshipper.phone'(value) {
+      this.submit()
     }
   },
   created() {
     this.setGoodsCost(this.costOfGoods)
+    this.resetData()
   },
   methods: {
     ...mapMutations([
@@ -140,19 +157,45 @@ export default {
       'setGoodsCost',
       'setDropshipmentCost',
       'setShipmentCost',
-      'setTotal'
+      'setTotal',
+      'setValid',
+      'setSelectedShipment',
+      'setSelectedPayment'
     ]),
     resetDropship() {
       this.dropshipper.name = null
       this.dropshipper.phone = null
       this.dropshipCost = 0
     },
+    resetData() {
+      this.email = null
+      this.phone = null
+      this.address = null
+      this.isDropshipper = false
+      this.dropshipper.name = null
+      this.dropshipper.phone = null
+      this.dropshipCost = 0
+      this.setBuyerEmail(null)
+      this.setBuyerPhone(null)
+      this.setBuyerAddress(null)
+      this.setDropshipperName(null)
+      this.setDropshipperPhone(null)
+      this.setSelectedPayment(null)
+      this.setSelectedShipment(null)
+      this.setTotal(0)
+      this.setValid(false)
+    },
     submit() {
-      this.setBuyerEmail(this.email)
-      this.setBuyerPhone(this.phone)
-      this.setBuyerAddress(this.address)
-      this.setDropshipperName(this.dropshipper.name)
-      this.setDropshipperPhone(this.dropshipper.phone)
+      this.$refs.form.validate().then((success) => {
+        if (success) {
+          this.setBuyerEmail(this.email)
+          this.setBuyerPhone(this.phone)
+          this.setBuyerAddress(this.address)
+          this.setDropshipperName(this.dropshipper.name)
+          this.setDropshipperPhone(this.dropshipper.phone)
+          this.setValid(true)
+        }
+      })
     }
   }
 }

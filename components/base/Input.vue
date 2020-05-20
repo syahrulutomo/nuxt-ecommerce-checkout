@@ -55,6 +55,7 @@
           clear
         </i>
       </div>
+      <p class="error-msg">{{ errors[0] }}</p>
     </ValidationProvider>
   </div>
 </template>
@@ -74,7 +75,7 @@ export default {
     value: { type: String, default: undefined },
     color: { type: String, default: '#999' },
     borderColor: { type: String, default: '#e5e5e5' },
-    rules: { type: [String, Object], default: 'required' },
+    rules: { type: [String, Object], default: '' },
     disabled: { type: Boolean, default: false },
     setFocused: { type: Boolean, default: false }
   },
@@ -164,6 +165,11 @@ export default {
       font-size 18px
       position absolute
       right 13px
+
+  .error-msg
+    margin-top 3px
+    font-size 14px
+    color #b00020
 
 .success
   color #4fef8f

@@ -29,19 +29,26 @@
     <div class="summary__bills">
       <div class="summary__bills__cost-of-goods">
         <p class="text">Cost of goods</p>
-        <p class="value">{{ currencyFormatter(goodsCost) }}</p>
+        <p v-if="goodsCost" class="value">{{ currencyFormatter(goodsCost) }}</p>
       </div>
-      <div class="summary__bills__dropship-fee">
+      <div v-if="dropshipmentCost" class="summary__bills__dropship-fee">
         <p class="text">Dropshipping Fee</p>
-        <p class="value">{{ currencyFormatter(dropshipmentCost) }}</p>
+        <p class="value">
+          {{ currencyFormatter(dropshipmentCost) }}
+        </p>
       </div>
       <div v-show="shipment" class="summary__bills__shipment-fee">
-        <p class="text"><span>GO-SEND</span> shipment</p>
-        <p class="value">{{ currencyFormatter(shipmentCost) }}</p>
+        <p v-if="shipment" class="text">
+          <span>{{ shipment.name }}</span> shipment
+        </p>
+        <p v-if="shipment" class="value">
+          {{ currencyFormatter(shipment.cost) }}
+        </p>
       </div>
       <div class="summary__bills__total">
         <p class="text">Total</p>
-        <p class="value">{{ currencyFormatter(total) }}</p>
+        <p v-if="total" class="value">{{ currencyFormatter(total) }}</p>
+        <p v-else class="value">0</p>
       </div>
       <slot name="submit-btn" />
     </div>
@@ -156,6 +163,7 @@ export default {
 
   &__bills
     width 100%
+    margin-top 4rem
 
     &__cost-of-goods, &__dropship-fee, &__shipment-fee
       display flex
