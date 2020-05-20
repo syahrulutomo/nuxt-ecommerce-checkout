@@ -23,14 +23,14 @@ For detailed explanation on how things work, check out [Nuxt.js docs](https://nu
 
 
 ## Tech Stacks
-⋅⋅1. Nuxt --> Framework
-..2. Stylus --> CSS preprocessor
-..3. Eslint & Prettier -->
-..4. Vuex --> state management
-..5. Vuex Persistedstate --> caching state
-..6. Vee-validate --> form validation
-..7. Nuxt/toast --> Alert
-..8. lodash --> utility tools
+1. Nuxt --> Framework
+2. Stylus --> CSS preprocessor
+3. Eslint & Prettier -->
+4. Vuex --> state management
+5. Vuex Persistedstate --> caching state
+6. Vee-validate --> form validation
+7. Nuxt/toast --> Alert
+8. lodash --> utility tools
 
 ## Description
 
