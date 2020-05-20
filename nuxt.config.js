@@ -17,11 +17,6 @@ export default {
     link: [
       { rel: 'icon', type: 'image/x-icon', href: '/jakmall.ico' },
       {
-        rel: 'stylesheet',
-        href:
-          'https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700;900&display=swap'
-      },
-      {
         href:
           'https://unpkg.com/material-components-web@latest/dist/material-components-web.min.css',
         rel: 'stylesheet'
@@ -29,12 +24,6 @@ export default {
       {
         href: 'https://fonts.googleapis.com/icon?family=Material+Icons',
         rel: 'stylesheet'
-      }
-    ],
-    script: [
-      {
-        src:
-          'https://unpkg.com/material-components-web@latest/dist/material-components-web.min.js'
       }
     ]
   },
@@ -45,7 +34,20 @@ export default {
   /*
    ** Global CSS
    */
-  css: ['@/assets/toast.styl', '@/assets/main.styl'],
+  css: ['@/assets/toast.styl', '@/assets/fonts.styl', '@/assets/main.styl'],
+  extractCSS: true,
+  optimization: {
+    splitChunks: {
+      cacheGroups: {
+        styles: {
+          name: 'styles',
+          test: /\.(css|vue|styl)$/,
+          chunks: 'all',
+          enforce: true
+        }
+      }
+    }
+  },
   /*
    ** Plugins to load before mounting the App
    */
@@ -93,6 +95,25 @@ export default {
     /*
      ** You can extend webpack config here
      */
-    extend(config, ctx) {}
+    extend(config, ctx) {
+      config.module.rules.forEach((rule) => {
+        if (String(rule.test) === String(/\.(png|jpe?g|gif|svg|webp)$/)) {
+          // add a second loader when loading images
+          rule.use.push({
+            loader: 'image-webpack-loader',
+            options: {
+              svgo: {
+                plugins: [
+                  // use these settings for internet explorer for proper scalable SVGs
+                  // https://css-tricks.com/scale-svg/
+                  { removeViewBox: false },
+                  { removeDimensions: true }
+                ]
+              }
+            }
+          })
+        }
+      })
+    }
   }
 }
