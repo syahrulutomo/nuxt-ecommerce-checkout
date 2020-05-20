@@ -102,7 +102,9 @@ export default {
       goodsCost: (state) => state.purchase.bills.goods,
       dropshipmentCost: (state) => state.purchase.bills.dropshipment,
       total: (state) => state.purchase.total,
-      goods: (state) => state.purchase.goods
+      goods: (state) => state.purchase.goods,
+      currentStep: (state) => state.purchase.currentStep,
+      isDropshippered: (state) => state.purchase.isDropshipper
     }),
     costOfGoods() {
       const data = this.goods.reduce(
@@ -119,6 +121,7 @@ export default {
     isDropshipper(value) {
       if (value === false) this.resetDropship()
       else this.dropshipCost = 5900
+      this.setIsDropshipper(value)
     },
     dropshipCost(value) {
       this.setDropshipmentCost(value)
@@ -140,11 +143,14 @@ export default {
     },
     'dropshipper.phone'(value) {
       this.submit()
+    },
+    dropshipmentCost(value) {
+      this.dropshipCost = value
     }
   },
   created() {
     this.setGoodsCost(this.costOfGoods)
-    this.resetData()
+    this.loadData()
   },
   methods: {
     ...mapMutations([
@@ -167,27 +173,18 @@ export default {
       this.dropshipper.phone = null
       this.dropshipCost = 0
     },
-    resetData() {
-      this.email = null
-      this.phone = null
-      this.address = null
-      this.isDropshipper = false
-      this.dropshipper.name = null
-      this.dropshipper.phone = null
-      this.dropshipCost = 0
-      this.setBuyerEmail(null)
-      this.setBuyerPhone(null)
-      this.setBuyerAddress(null)
-      this.setDropshipperName(null)
-      this.setDropshipperPhone(null)
-      this.setSelectedPayment(null)
-      this.setSelectedShipment(null)
-      this.setTotal(0)
-      this.setValid(false)
+    loadData() {
+      this.email = this.buyerEmail
+      this.phone = this.buyerPhone
+      this.address = this.buyerAddress
+      this.dropshipper.name = this.dropshipperName
+      this.dropshipper.phone = this.dropshipperPhone
+      this.isDropshipper = this.isDropshippered
     },
     submit() {
       this.$refs.form.validate().then((success) => {
         if (success) {
+          this.setIsDropshipper(this.isDropshipper)
           this.setBuyerEmail(this.email)
           this.setBuyerPhone(this.phone)
           this.setBuyerAddress(this.address)

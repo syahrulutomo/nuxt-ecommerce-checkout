@@ -84,7 +84,7 @@ export default {
     },
     submitDelivery() {
       if (this.shipment && this.payment) this.setCurrentStep(this.step + 1)
-      else this.$toast.error('Please select shipment method')
+      else this.$toast.error('Please select one of the options')
     }
   }
 }

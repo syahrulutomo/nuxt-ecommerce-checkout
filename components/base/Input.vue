@@ -5,7 +5,7 @@
         v-if="label"
         class="input__label"
         :class="[
-          isFocused ? 'focused' : '',
+          isFocused || input !== null ? 'focused' : '',
           valid && isFocused && !disabled
             ? 'success'
             : errors && !disabled && isFocused

@@ -37,13 +37,42 @@ export default {
     this.generateRandom()
   },
   methods: {
-    ...mapMutations(['setCurrentStep']),
+    ...mapMutations([
+      'setBuyerEmail',
+      'setBuyerPhone',
+      'setBuyerAddress',
+      'setIsDropshipper',
+      'setDropshipperName',
+      'setDropshipperPhone',
+      'setGoodsCost',
+      'setDropshipmentCost',
+      'setShipmentCost',
+      'setTotal',
+      'setValid',
+      'setSelectedShipment',
+      'setSelectedPayment',
+      'setCurrentStep'
+    ]),
     generateRandom() {
       const chars = 'ABCDEFGHJKLMNPQRSTUFWXYZ23456789'
       this.random = _.sampleSize(chars, 5).join('')
     },
     back() {
+      this.resetData()
       this.setCurrentStep(1)
+    },
+    resetData() {
+      this.setBuyerEmail(null)
+      this.setBuyerPhone(null)
+      this.setBuyerAddress(null)
+      this.setIsDropshipper(false)
+      this.setDropshipperName(null)
+      this.setDropshipperPhone(null)
+      this.setDropshipmentCost(0)
+      this.setSelectedPayment(null)
+      this.setSelectedShipment(null)
+      this.setTotal(0)
+      this.setValid(false)
     }
   }
 }
