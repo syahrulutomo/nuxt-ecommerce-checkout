@@ -1,5 +1,3 @@
-# jackmall-beta
-
 > Beta apps
 
 ## Build Setup
